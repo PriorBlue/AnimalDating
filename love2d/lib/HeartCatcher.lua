@@ -2,7 +2,7 @@ HeartCatcher = {}
 
 function HeartCatcher.load()
   HeartCatcher.player = {}
-  HeartCatcher.player.img = love.graphics.newImage('assets/DownArrow.png')
+  HeartCatcher.player.img = love.graphics.newImage('data/DownArrow.png')
   HeartCatcher.player.x = love.graphics.getWidth() * 0.5 - HeartCatcher.player.img:getWidth() * 0.5
   HeartCatcher.player.y = love.graphics.getHeight() * 0.9 - HeartCatcher.player.img:getHeight() * 0.5
   HeartCatcher.player.speed = 500
@@ -10,7 +10,7 @@ function HeartCatcher.load()
   HeartCatcher.heartData = {}
   HeartCatcher.heartData.spawnTimer = 0.4
   HeartCatcher.heartData.speed = 750
-  HeartCatcher.heartData.img = love.graphics.newImage('assets/Heart.png')
+  HeartCatcher.heartData.img = love.graphics.newImage('data/Heart.png')
   
   HeartCatcher.allHearts = {}
   HeartCatcher.createHeartTimer = HeartCatcher.heartData.spawnTimer
