@@ -1,0 +1,54 @@
+It's a lazy summer day. Summer vacation is approaching fast, and with it the promise of freedom and bliss.
+
+Throgh the filter of wistful thoughts the teacher's words are distant shreds spoken in a strange language.
+
+The sands of time slowly trickle down the body constantly drawing attention to its passage.
+
+A particularly sharp sound disturbs this little world once in a while, but it soon returns to its peaceful state.
+
+Whole days pass like this, punctuated only by the ringing of school bells.
+
+Such as now.
+
+Slowly students gather the things and transform into an amorphous blob of lazyness.
+
+The mind wanders...
+
+Where am I gonna eat today...
+
+Water...
+
+Shower... shower... shower...
+
+The Tests... maybe akin Ekin = Eel...
+
+Do I need anything from-
+
+"Fuck!" suddenly I'm stumbling backwards.
+"Ow!" my head hit the floor hard, awakening me from my heat-induced stupor.
+Slowly I begin straightening myself, when I recognize the cause of my fall in front of me.
+
+[Reaction Minigame]
+[result: fail]
+	I watch as she gathers herself, apologizes and runs off. Too dazed to respond, I continue sitting there for a couple of minutes.
+
+	[Decision]
+	[A] I think I should go to the doctors.
+			[NEUTRAL END]
+	[B] I collect myself and go to your next class.
+			A couple Days later I die of brain injury.
+			[BAD END]
+[result: success]	
+	[image: Octopus Surprise]
+	A young, cute reason, about my age.
+	[Decision]
+	[A] "Sorry, my bad, I wasn't paying attention. I was lost in thoughts."
+		<--
+	[B] Apologize, excuse yourself and go to your next class.
+			[NoImage]
+			I sprint down the stairs into the classroom, just as biology class is about to start.
+			[FadeToBlack]
+			[FadeToNextScreen]
+		
+		
+		
