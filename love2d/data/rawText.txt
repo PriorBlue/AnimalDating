@@ -20,35 +20,64 @@ Water...
 
 Shower... shower... shower...
 
-The Tests... maybe akin Ekin = Eel...
+The Tests... maybe Ekin = Eel...
 
 Do I need anything from-
 
 "Fuck!" suddenly I'm stumbling backwards.
+
 "Ow!" my head hit the floor hard, awakening me from my heat-induced stupor.
 Slowly I begin straightening myself, when I recognize the cause of my fall in front of me.
 
 [Reaction Minigame]
 [result: fail]
-	I watch as she gathers herself, apologizes and runs off. Too dazed to respond, I continue sitting there for a couple of minutes.
-
+	I watch as she gathers herself, apologizes and runs off. Too dazed to respond, I continue sitting on the spot for a couple of minutes.
 	[Decision]
-	[A] I think I should go to the doctors.
+	[A] I think I should go to the doctor.
 			[NEUTRAL END]
-	[B] I collect myself and go to your next class.
-			A couple Days later I die of brain injury.
+	[B] I collect myself and go to my next class.
+			A couple days later you die of brain injury.
 			[BAD END]
 [result: success]	
 	[image: Octopus Surprise]
 	A young, cute reason, about my age.
 	[Decision]
 	[A] "Sorry, my bad, I wasn't paying attention. I was lost in thoughts."
-		<--
+		???: "Oh, no worries. I really wasn't paying attention, either."
+		She shoots you a sly look.
+		???: "Don't tell the teachers about it, though. They've told me to pay attention so often, one of these days they'll kill me."
+		"Sure."
+		"By the way, I'm MC."
+		Manari: "I'm Manari. I gotta go, but I'll see you around!"
+		[Decision]
+		[A] "Fuck, I completely forgot about class!"
+			I start running in the direction of class. Behind me, I hear Manari's bubbly laugh.
+		[B] "See you!"
+			I remember that I was supposed to be in class and start running.
+		[C] Hug her and leave.
+			She tenses up, but then relaxes and returns the hug. She is warm and soft. After a couple of seconds, she untangles herself and, waving goodbye, leaves to go to class. 
+			I really ought to do the same.
 	[B] Apologize, excuse yourself and go to your next class.
 			[NoImage]
 			I sprint down the stairs into the classroom, just as biology class is about to start.
 			[FadeToBlack]
 			[FadeToNextScreen]
+			"... and that is the difference between a theory and a hypothethis."
+			The bell rings, and people start packing up.
+			"Don't forget to study for the last test!"
+			I join the stream of people leaving the classroom hurriedly.
+			Suddenly, I feel something poking my arm. I turn, and end up facing assailant from the other day.
+			MC: "Hey. Do you need something?"
+			???: "Yeah, I need to apologize for slamming into you the other day."
+			[Decision]
+			[A] "No harm done."
+				???: "Still, I feel really bad about it."
+				MC: "Happens to the best of us."
+			[B] "I'm sorry, who are you? I don't remember who I am."
+				???: "Wha... you ass! Very funny."
+				MC: "Thanks for checking in on me, though."
+			[C] "Don't worry about me, are you okay?"
+				???: "Worried about me, are you? Yeah, I'm completely fine."
 		
 		
 		
