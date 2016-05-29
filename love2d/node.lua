@@ -55,7 +55,7 @@ nodeManager.draw = function()
 		end
 
 		love.graphics.rectangle("fill", v.x - 2, v.y - 2, v.width + 4, v.height + 4, 6)
-		
+
 		love.graphics.setColor(191, 191, 191)
 		love.graphics.rectangle("fill", v.x, v.y, v.width, v.height, 6)
 		if nodeManager.selectedNode == v then
@@ -63,13 +63,17 @@ nodeManager.draw = function()
 		else
 			love.graphics.setColor(63, 63, 63)
 		end
+
 		love.graphics.rectangle("fill", v.x + 1, v.y + 1, v.width - 2, 22, 6)
 		love.graphics.setColor(223, 223, 223)
 		love.graphics.printf(k, v.x, v.y + 4, v.width, "center")
+		love.graphics.setColor(223, 223, 223)
+		love.graphics.printf("x", v.x, v.y + 4, v.width - 8, "right")
 		love.graphics.setColor(0, 0, 0)
 		love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 6)
 		love.graphics.setColor(223, 223, 223)
 		love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 4)
+
 		if v.out then
 			for k2, v2 in pairs(v.out) do
 				if nodeManager.selectedNode == v and nodeManager.selectedText == cnt + 1 then
@@ -102,7 +106,11 @@ nodeManager.draw = function()
 			love.graphics.setColor(255, 127, 0)
 			love.graphics.printf(v.text .. "_", v.x + 28, v.y + cnt * 16 + 44, v.width - 36, "left")
 		else
-			love.graphics.setColor(223, 223, 223)
+			if v.text == "TEXT" then
+				love.graphics.setColor(127, 127, 127)
+			else
+				love.graphics.setColor(223, 223, 223)
+			end
 			love.graphics.printf(v.text, v.x + 28, v.y + cnt * 16 + 44, v.width - 36, "left")
 		end
 	end
@@ -167,25 +175,33 @@ nodeManager.mousepressed = function(x, y, button)
 	nodeManager.selectedName = nil
 	nodeManager.selectedText = nil
 	
-	if button == 1 then
+	if button == 1 or button == 2 then
 		for k, v in pairs(nodeManager.list) do
 			local cnt = 0
 
 			if mx >= v.x and mx <= v.x + v.width and my >= v.y and my <= v.y + v.height then
 				if my <= v.y + 24 then
-					nodeManager.drag = k
-					nodeManager.dragX = v.x - mx
-					nodeManager.dragY = v.y - my
+					if mx <= v.x + v.width - 24 then
+						nodeManager.drag = k
+						nodeManager.dragX = v.x - mx
+						nodeManager.dragY = v.y - my
+					else
+						nodeManager.list[k] = nil
+					end
 				elseif v.out then
 					for k2, v2 in pairs(v.out) do
 						if mx >= v.x + v.width - 18 and mx <= v.x + v.width - 6 and my >= v.y + cnt * 16 + 34 and my <= v.y + cnt * 16 + 46 then
-							nodeManager.node = k
-							nodeManager.out = k2
-							
-							nodeManager.outX = v.x + v.width - 12
-							nodeManager.outY = v.y + cnt * 16 + 40
-							nodeManager.mouseX = nodeManager.outX
-							nodeManager.mouseY = nodeManager.outY
+							if button == 1 then
+								nodeManager.node = k
+								nodeManager.out = k2
+								
+								nodeManager.outX = v.x + v.width - 12
+								nodeManager.outY = v.y + cnt * 16 + 40
+								nodeManager.mouseX = nodeManager.outX
+								nodeManager.mouseY = nodeManager.outY
+							elseif button == 2 then
+								v2.node = ""
+							end
 						end
 
 						cnt = cnt + 1
@@ -195,18 +211,20 @@ nodeManager.mousepressed = function(x, y, button)
 				nodeManager.selectedNode = v
 				nodeManager.selectedName = k
 				
-				if mx >= v.x and mx <= v.x + v.width and my >= v.y + cnt * 16 + 34 and my <= v.y + cnt * 16 + 46 then
-					local out = {}
-					
-					out.name = "ANSWER"
-					
-					if nodeManager.list[k].out then
-						table.insert(nodeManager.list[k].out, out)
-					else
-						nodeManager.list[k].out = {out}
-					end
+				if button == 1 then
+					if mx >= v.x and mx <= v.x + v.width and my >= v.y + cnt * 16 + 34 and my <= v.y + cnt * 16 + 46 then
+						local out = {}
+						
+						out.name = "ANSWER"
+						
+						if nodeManager.list[k].out then
+							table.insert(nodeManager.list[k].out, out)
+						else
+							nodeManager.list[k].out = {out}
+						end
 
-					break
+						break
+					end
 				end
 				
 				cnt = cnt + 1
@@ -220,11 +238,16 @@ nodeManager.mousepressed = function(x, y, button)
 					local cnt2 = 0
 					for k2, v2 in pairs(v.out) do
 						if mx >= v.x and mx <= v.x + v.width - 16 and my >= v.y + cnt2 * 16 + 34 and my <= v.y + cnt2 * 16 + 46 then
-							nodeManager.selectedText = cnt2 + 1
+							if button == 1 then
+								nodeManager.selectedText = cnt2 + 1
 
-							if v2.name == "ANSWER" then
-								v2.name = ""
+								if v2.name == "ANSWER" then
+									v2.name = ""
+								end
+							elseif button == 2 then
+								table.remove(nodeManager.list[k].out, cnt2 + 1)
 							end
+
 							break
 						end
 						cnt2 = cnt2 + 1
@@ -245,11 +268,20 @@ nodeManager.mousereleased = function(x, y, button)
 	nodeManager.drag = nil
 	
 	if nodeManager.node then
+		local connect = false
+		
 		for k, v in pairs(nodeManager.list) do
 			if mx >= v.x and mx <= v.x + v.width and my >= v.y and my <= v.y + v.height then
 				nodeManager.list[nodeManager.node].out[nodeManager.out].node = k
+				connect = true
 				break
 			end
+		end
+		
+		if not connect then
+			local node = nodeManager.addNode(mx, my)
+			
+			nodeManager.list[nodeManager.node].out[nodeManager.out].node = node
 		end
 	end
 	
@@ -291,19 +323,7 @@ end
 
 nodeManager.keypressed = function(key)
 	if key == "+" then
-		local node = {}
-		node.width = 256
-		node.height = 191
-		node.x = math.floor(nodeManager.mouseX - node.width * 0.5)
-		node.y = math.floor(nodeManager.mouseY - node.height * 0.5)
-		node.text = "TEXT"
-		
-		for i = 1, 999 do
-			if not nodeManager.list["node" .. i]  then
-				nodeManager.list["node" .. i] = node
-				break
-			end
-		end
+		nodeManager.addNode(nodeManager.mouseX, nodeManager.mouseY)
 	elseif key == "backspace" then
 		if nodeManager.selectedNode and nodeManager.selectedText then
 			if nodeManager.selectedText == 0 then
@@ -343,6 +363,23 @@ nodeManager.textinput = function(text)
 			nodeManager.selectedNode.text = nodeManager.selectedNode.text .. text
 		else
 			nodeManager.selectedNode.out[nodeManager.selectedText].name = nodeManager.selectedNode.out[nodeManager.selectedText].name .. text
+		end
+	end
+end
+
+nodeManager.addNode = function(x, y, parent)
+	local node = {}
+
+	node.width = 256
+	node.height = 191
+	node.x = math.floor(x - node.width * 0.5)
+	node.y = math.floor(y - node.height * 0.5)
+	node.text = "TEXT"
+	
+	for i = 1, 999 do
+		if not nodeManager.list["node" .. i]  then
+			nodeManager.list["node" .. i] = node
+			return "node" .. i
 		end
 	end
 end
