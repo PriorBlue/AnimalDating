@@ -8,7 +8,7 @@ function HeartCatcher.load()
   HeartCatcher.player.speed = 500
   
   HeartCatcher.heartData = {}
-  HeartCatcher.heartData.spawnTimer = 0.4
+  HeartCatcher.heartData.spawnTimer = 0.05
   HeartCatcher.heartData.speed = 750
   HeartCatcher.heartData.img = love.graphics.newImage('data/Heart.png')
   
@@ -16,17 +16,24 @@ function HeartCatcher.load()
   HeartCatcher.createHeartTimer = HeartCatcher.heartData.spawnTimer
   HeartCatcher.currentHeartTimer = HeartCatcher.createHeartTimer
   
-  HeartCatcher.timeLeft = 60
+  HeartCatcher.timeLeft = 30
   HeartCatcher.score = 0
+  
+  HeartCatcher.dropTarget = 0
+  HeartCatcher.lastDropTarget = 0
+  HeartCatcher.dropTargetSpeed = 100
+  HeartCatcher.currentDropPosition = love.graphics.getWidth() * 0.5 - HeartCatcher.heartData.img:getWidth() * 0.5;
+  HeartCatcher.SetNewDropTarget()
 end
 
 
 function HeartCatcher.update(dt)
-  HeartCatcher.timeLeft = HeartCatcher.timeLeft - dt
+  HeartCatcher.CheckGameOverConditions(dt)
   HeartCatcher.MovePlayer(dt)
   HeartCatcher.ClampPositionToScreen(HeartCatcher.player)
   
   HeartCatcher.UpdateHearts(dt)
+  HeartCatcher.MoveDropTarget(dt)
   HeartCatcher.DoCollisionChecks()
 end
 
@@ -36,6 +43,16 @@ function HeartCatcher.draw(dt)
   for i, heart in ipairs(HeartCatcher.allHearts) do
     love.graphics.draw(heart.img, heart.x, heart.y)
   end
+end
+
+function HeartCatcher.CheckGameOverConditions(dt)
+  HeartCatcher.timeLeft = HeartCatcher.timeLeft - dt
+  
+  if HeartCatcher.timeLeft < 0 then
+    -- stop the game here?
+    -- Throw Event?
+  end
+  
 end
 
 function HeartCatcher.ClampPositionToScreen(obj)
@@ -84,9 +101,8 @@ end
 function HeartCatcher.SpawnHeart(dt)
   HeartCatcher.currentHeartTimer = HeartCatcher.currentHeartTimer - dt
   if HeartCatcher.currentHeartTimer < 0 then
-    local randomNumber = math.random (0, love.graphics.getWidth() - HeartCatcher.heartData.img:getWidth())
     local newHeart = {}
-    newHeart.x = randomNumber
+    newHeart.x = HeartCatcher.currentDropPosition
     newHeart.y = -10
     newHeart.img = HeartCatcher.heartData.img
     table.insert(HeartCatcher.allHearts, newHeart)
@@ -109,6 +125,7 @@ function HeartCatcher.RemoveHeart(i, collected)
   if collected then
     HeartCatcher.score = HeartCatcher.score + 1
   else
+    print (HeartCatcher.allHearts[i].x) 
     HeartCatcher.score = HeartCatcher.score - 10
   end
   
@@ -117,7 +134,9 @@ function HeartCatcher.RemoveHeart(i, collected)
 end
 
 function HeartCatcher.UpdateHearts(dt)
-  HeartCatcher.SpawnHeart(dt)
+  if HeartCatcher.timeLeft > 2 then
+    HeartCatcher.SpawnHeart(dt)
+  end
   HeartCatcher.MoveHearts(dt)
 end
 
@@ -135,4 +154,55 @@ function HeartCatcher.DoCollisionChecks()
       HeartCatcher.ProcessHeartCollision(i)
     end
   end
+end
+
+function HeartCatcher.SetNewDropTarget()
+  HeartCatcher.lastDropTarget = HeartCatcher.dropTarget
+  
+  local heartWidth = HeartCatcher.heartData.img:getWidth()
+  HeartCatcher.dropTarget = love.math.random(heartWidth * 0.5, love.graphics.getWidth() - heartWidth * 0.5)
+  HeartCatcher.dropTargetSpeed = love.math.random(350, 1000)
+end
+
+function HeartCatcher.MoveDropTarget(dt)
+  local distanceCovered = HeartCatcher.dropTargetSpeed * dt * HeartCatcher.GetCurrentDropDistancePercentage()
+  local inverted = false
+  if (HeartCatcher.currentDropPosition > HeartCatcher.dropTarget) then
+    distanceCovered = - distanceCovered
+    inverted = true
+  end
+  
+  HeartCatcher.currentDropPosition = HeartCatcher.currentDropPosition + distanceCovered
+  
+  if HeartCatcher.currentDropPosition < HeartCatcher.dropTarget and inverted then
+    HeartCatcher.SetNewDropTarget()
+  else if HeartCatcher.currentDropPosition > HeartCatcher.dropTarget and not inverted then
+    HeartCatcher.SetNewDropTarget()
+    end
+  end
+end
+
+function HeartCatcher.GetCurrentDropDistancePercentage()
+  local totalDistance = GetDistance(HeartCatcher.lastDropTarget, HeartCatcher.dropTarget)
+  local coveredDistance = GetDistance(HeartCatcher.lastDropTarget, HeartCatcher.currentDropPosition)
+  
+  local percentage = 0
+  if totalDistance > 0 then 
+    percentage = coveredDistance / totalDistance
+  end
+    
+  -- so now we have a value in [0, 1]
+  -- make it so we have, depending on distance, something like [0.x --- 1 --- 0.x]
+  local x = percentage - 0.5
+  
+  if (x > 0.5) then
+    -- sometimes x = inf and i totaly don't understand why, fix it here.
+    x = 0.5
+  end
+  
+  return -(x * x) * 3 + 1
+end
+
+function GetDistance(a, b)
+  return math.abs(a - b)
 end
