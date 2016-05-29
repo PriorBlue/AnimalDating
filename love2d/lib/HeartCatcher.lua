@@ -125,6 +125,7 @@ function HeartCatcher.RemoveHeart(i, collected)
   if collected then
     HeartCatcher.score = HeartCatcher.score + 1
   else
+    print (HeartCatcher.allHearts[i].x) 
     HeartCatcher.score = HeartCatcher.score - 10
   end
   
@@ -160,7 +161,7 @@ function HeartCatcher.SetNewDropTarget()
   
   local heartWidth = HeartCatcher.heartData.img:getWidth()
   HeartCatcher.dropTarget = love.math.random(heartWidth * 0.5, love.graphics.getWidth() - heartWidth * 0.5)
-  HeartCatcher.dropTargetSpeed = love.math.random(200, 1000)
+  HeartCatcher.dropTargetSpeed = love.math.random(350, 1000)
 end
 
 function HeartCatcher.MoveDropTarget(dt)
@@ -185,11 +186,20 @@ function HeartCatcher.GetCurrentDropDistancePercentage()
   local totalDistance = GetDistance(HeartCatcher.lastDropTarget, HeartCatcher.dropTarget)
   local coveredDistance = GetDistance(HeartCatcher.lastDropTarget, HeartCatcher.currentDropPosition)
   
-  local percentage = coveredDistance / totalDistance
+  local percentage = 0
+  if totalDistance > 0 then 
+    percentage = coveredDistance / totalDistance
+  end
+    
   -- so now we have a value in [0, 1]
   -- make it so we have, depending on distance, something like [0.x --- 1 --- 0.x]
-  
   local x = percentage - 0.5
+  
+  if (x > 0.5) then
+    -- sometimes x = inf and i totaly don't understand why, fix it here.
+    x = 0.5
+  end
+  
   return -(x * x) * 3 + 1
 end
 

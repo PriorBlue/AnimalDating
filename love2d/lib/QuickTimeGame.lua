@@ -10,7 +10,6 @@ function QuickTimeGame.load()
   QuickTimeGame.succeeded = false
 end
 
-
 function QuickTimeGame.update(dt)
   if love.keyboard.isDown('space') then
       QuickTimeGame.Evaluate(true)
