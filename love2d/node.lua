@@ -20,6 +20,7 @@ nodeManager.init = function()
 	nodeManager.selectedText = nil
 
 	love.graphics.setLineWidth(3)
+	love.graphics.setDefaultFilter("nearest", "nearest")
 end
 
 nodeManager.update = function(dt)
@@ -48,7 +49,7 @@ nodeManager.draw = function()
 		local cnt = 0
 		
 		if nodeManager.selectedNode == v then
-			love.graphics.setColor(255, 191, 0)
+			love.graphics.setColor(255, 127, 0)
 		else
 			love.graphics.setColor(127, 127, 127)
 		end
@@ -75,7 +76,11 @@ nodeManager.draw = function()
 					love.graphics.setColor(191, 63, 0)
 					love.graphics.printf(v2.name .. "_", v.x, v2.y - 8, v.width - 32, "right")
 				else
-					love.graphics.setColor(63, 63, 63)
+					if v2.name == "ANSWER" then
+						love.graphics.setColor(159, 159, 159)
+					else
+						love.graphics.setColor(31, 31, 31)
+					end
 					love.graphics.printf(v2.name, v.x, v2.y - 8, v.width - 32, "right")
 				end
 				love.graphics.setColor(63, 63, 63)
@@ -149,6 +154,14 @@ end
 nodeManager.mousepressed = function(x, y, button)
 	local mx = x / nodeManager.scale - nodeManager.scrollX
 	local my = y / nodeManager.scale - nodeManager.scrollY
+	
+	if nodeManager.selectedNode and nodeManager.selectedText then
+		if nodeManager.selectedText == 0 and nodeManager.selectedNode.text == "" then
+			nodeManager.selectedNode.text = "TEXT"
+		elseif nodeManager.selectedNode.out and nodeManager.selectedNode.out[nodeManager.selectedText] and nodeManager.selectedNode.out[nodeManager.selectedText].name == "" then
+			nodeManager.selectedNode.out[nodeManager.selectedText].name = "ANSWER"
+		end
+	end
 	
 	nodeManager.selectedNode = nil
 	nodeManager.selectedName = nil
@@ -279,10 +292,10 @@ end
 nodeManager.keypressed = function(key)
 	if key == "+" then
 		local node = {}
-		node.x = 512
-		node.y = 256
 		node.width = 256
 		node.height = 191
+		node.x = math.floor(nodeManager.mouseX - node.width * 0.5)
+		node.y = math.floor(nodeManager.mouseY - node.height * 0.5)
 		node.text = "TEXT"
 		
 		for i = 1, 999 do
