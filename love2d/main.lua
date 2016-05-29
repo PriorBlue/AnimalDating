@@ -5,9 +5,6 @@ require("lib/text_gui")
 
 function love.load()
 	nodeManager.init()
-	local font
-	font = love.graphics.newFont("font/font.ttf", 16)
-	love.graphics.setFont(font)
   text_gui.load()
 end
 

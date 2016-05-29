@@ -21,6 +21,9 @@ nodeManager.init = function()
 
 	love.graphics.setLineWidth(3)
 	love.graphics.setDefaultFilter("nearest", "nearest")
+  
+	nodeManager.font = love.graphics.newFont("font/font.ttf", 16)
+	love.graphics.setFont(nodeManager.font)
 end
 
 nodeManager.update = function(dt)
@@ -39,7 +42,7 @@ nodeManager.update = function(dt)
 		cnt = cnt + 1
 	end
 end
-	
+
 nodeManager.draw = function()
 	love.graphics.setBlendMode("alpha")
 	love.graphics.scale(nodeManager.scale, nodeManager.scale)
@@ -47,6 +50,17 @@ nodeManager.draw = function()
 
 	for k, v in pairs(nodeManager.list) do
 		local cnt = 0
+    v.height = 72
+    
+    if not v._text then
+      v._text = love.graphics.newText(nodeManager.font)
+    end
+    
+    if v.out then
+      v.height = v.height + #v.out * 16
+    end
+    
+    v.height = v.height + v._text:getHeight()
 		
 		if nodeManager.selectedNode == v then
 			love.graphics.setColor(255, 127, 0)
@@ -85,7 +99,12 @@ nodeManager.draw = function()
 					else
 						love.graphics.setColor(31, 31, 31)
 					end
-					love.graphics.printf(v2.name, v.x, v2.y - 8, v.width - 32, "right")
+          
+          if string.len(v2.name) < 24 then
+            love.graphics.printf(v2.name, v.x + 8, v2.y - 8, v.width - 32, "right")
+          else
+            love.graphics.printf(string.sub(v2.name, 0, 20) .. "...", v.x + 8, v2.y - 8, v.width - 32, "right")
+          end
 				end
 				love.graphics.setColor(63, 63, 63)
 				love.graphics.circle("fill", v2.x, v2.y, 6)
@@ -104,14 +123,17 @@ nodeManager.draw = function()
 
 		if nodeManager.selectedNode == v and nodeManager.selectedText == 0 then
 			love.graphics.setColor(255, 127, 0)
-			love.graphics.printf(v.text .. "_", v.x + 28, v.y + cnt * 16 + 44, v.width - 36, "left")
+      v._text:setf(v.text .. "_", v.width - 36, "left")
+      love.graphics.draw(v._text, v.x + 28, v.y + cnt * 16 + 44)
 		else
 			if v.text == "TEXT" then
 				love.graphics.setColor(127, 127, 127)
 			else
 				love.graphics.setColor(223, 223, 223)
 			end
-			love.graphics.printf(v.text, v.x + 28, v.y + cnt * 16 + 44, v.width - 36, "left")
+
+      v._text:setf(v.text, v.width - 36, "left")
+      love.graphics.draw(v._text, v.x + 28, v.y + cnt * 16 + 44)
 		end
 	end
 	
@@ -122,7 +144,9 @@ nodeManager.draw = function()
 				if v2.node and nodeManager.list[v2.node] then
 					love.graphics.line(
 						v2.x, v2.y,
-						nodeManager.list[v2.node].x + 12, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5
+            v2.x + 24, v2.y,
+						nodeManager.list[v2.node].x + 12 - 24, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5,
+            nodeManager.list[v2.node].x + 12, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5
 					)
 					
 					love.graphics.setColor(0, 127, 255)
@@ -140,7 +164,9 @@ nodeManager.draw = function()
 		love.graphics.circle("fill", nodeManager.outX , nodeManager.outY, 4)
 		love.graphics.line(
 			nodeManager.outX, nodeManager.outY,
-			nodeManager.mouseX, nodeManager.mouseY
+      nodeManager.outX + 24, nodeManager.outY,
+			nodeManager.mouseX - 24, nodeManager.mouseY,
+      nodeManager.mouseX, nodeManager.mouseY
 		)
 
 		for k, v in pairs(nodeManager.list) do
@@ -237,7 +263,7 @@ nodeManager.mousepressed = function(x, y, button)
 				elseif v.out then
 					local cnt2 = 0
 					for k2, v2 in pairs(v.out) do
-						if mx >= v.x and mx <= v.x + v.width - 16 and my >= v.y + cnt2 * 16 + 34 and my <= v.y + cnt2 * 16 + 46 then
+						if mx >= v.x and mx <= v.x + v.width - 24 and my >= v.y + cnt2 * 16 + 34 and my <= v.y + cnt2 * 16 + 46 then
 							if button == 1 then
 								nodeManager.selectedText = cnt2 + 1
 
@@ -322,7 +348,7 @@ nodeManager.wheelmoved = function(x, y)
 end
 
 nodeManager.keypressed = function(key)
-	if key == "+" then
+	if key == "+" and not nodeManager.selectedText then
 		nodeManager.addNode(nodeManager.mouseX, nodeManager.mouseY)
 	elseif key == "backspace" then
 		if nodeManager.selectedNode and nodeManager.selectedText then
@@ -372,8 +398,8 @@ nodeManager.addNode = function(x, y, parent)
 
 	node.width = 256
 	node.height = 191
-	node.x = math.floor(x - node.width * 0.5)
-	node.y = math.floor(y - node.height * 0.5)
+	node.x = math.floor(x - 12)
+	node.y = math.floor(y - 44)
 	node.text = "TEXT"
 	
 	for i = 1, 999 do
