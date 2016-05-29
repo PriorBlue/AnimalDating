@@ -19,11 +19,15 @@ function love.draw()
 end
 
 function love.keypressed(key)
-
+	nodeManager.keypressed(key)
 end
 
 function love.keyreleased(key)
 
+end
+
+function love.textinput(text)
+	nodeManager.textinput(text)
 end
 
 function love.mousepressed(x, y, button)
@@ -36,4 +40,8 @@ end
 
 function love.mousemoved(x, y, dx, dy)
 	nodeManager.mousemoved(x, y, dx, dy)
+end
+
+function love.wheelmoved(x, y)
+	nodeManager.wheelmoved(x, y)
 end
