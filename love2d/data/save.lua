@@ -55,21 +55,21 @@ return {
 	node13 = {
 		width = 320,
 		y = 964,
-		x = 1373.5,
+		x = 1373,
 		height = 120,
 		text = "???: \"Worried about me, are you? Yeah, I'm completely fine.\"",
 	},
 	node8 = {
 		width = 320,
-		y = -121.33333333333,
-		x = 1245.5,
+		y = -121,
+		x = 1245,
 		height = 120,
 		text = "I start running in the direction of class. Behind me, I hear Manari's bubbly laugh.",
 	},
 	node5 = {
 		width = 320,
-		y = 55.166666666667,
-		x = 854.25,
+		y = 55,
+		x = 854,
 		height = 104,
 		text = "A couple days later you die of brain injury.%tBAD END",
 	},
@@ -94,37 +94,37 @@ return {
 		height = 136,
 		text = "[surprise]A young, cute reason, about my age.",
 	},
-	node12 = {
+	node4 = {
 		width = 320,
-		y = 771,
-		x = 1371.5,
-		height = 120,
-		text = "???: \"Wha... you ass! Very funny.\"%tMC: \"Thanks for checking in on me, though.\"",
+		y = -162,
+		x = 857,
+		height = 104,
+		text = "I think I should go see a doctor.%tNEUTRAL END",
 	},
 	node7 = {
 		width = 320,
 		out = {
 			{
 				y = 722,
-				x = 1176.5,
+				x = 1176,
 				name = "\"No harm done.\"",
 				node = "node11",
 			},
 			{
 				y = 738,
-				x = 1176.5,
+				x = 1176,
 				name = "\"I'm sorry, who are you? I don't remember who I am.\"",
 				node = "node12",
 			},
 			{
 				y = 754,
-				x = 1176.5,
+				x = 1176,
 				name = "\"Don't worry about me, are you okay?\"",
 				node = "node13",
 			},
 		},
 		y = 682,
-		x = 868.5,
+		x = 868,
 		height = 504,
 		text = "I sprint down the stairs into the classroom, just as biology class is about to start.[FadeToBlack][FadeToNextScreen]\
 %t\"... and that is the difference between a theory and a hypothethis.\"\
@@ -135,45 +135,24 @@ return {
 %tMC: \"Hey. Do you need something?\"\
 %t???: \"Yeah, I need to apologize for slamming into you the other day.\"",
 	},
-	node11 = {
-		width = 320,
-		y = 562.75,
-		x = 1341.5,
-		height = 120,
-		text = "???: \"Still, I feel really bad about it.\"%tMC: \"Happens to the best of us.\"",
-	},
-	node10 = {
-		width = 320,
-		y = 301.66666666667,
-		x = 1319,
-		height = 184,
-		text = "She tenses up, but then relaxes and returns the hug. She is warm and soft. After a couple of seconds, she untangles herself and, waving goodbye, leaves to go to class. %tI really ought to do the same.",
-	},
-	node9 = {
-		width = 320,
-		y = 88,
-		x = 1305,
-		height = 120,
-		text = "I remember that I was supposed to be in class and start running.",
-	},
 	node1 = {
 		width = 320,
 		out = {
 			{
-				y = 244.16666666667,
-				x = 415.66666666667,
+				y = 244,
+				x = 415,
 				name = "Minigame success",
 				node = "node2",
 			},
 			{
-				y = 260.16666666667,
-				x = 415.66666666667,
+				y = 260,
+				x = 415,
 				name = "Minigame fail",
 				node = "node3",
 			},
 		},
-		y = 204.16666666667,
-		x = 107.66666666667,
+		y = 204,
+		x = 107,
 		height = 744,
 		text = "It's a lazy summer day. Summer vacation is approaching fast, and with it the promise of freedom and bliss.%tThrogh the filter of wistful thoughts the teacher's words are distant shreds spoken in a strange language.\
 %tThe sands of time slowly trickle down the body constantly drawing attention to its passage.\
@@ -192,11 +171,32 @@ return {
 %tSlowly I begin straightening myself, when I recognize the cause of my fall in front of me.\
 %tReaction Minigame",
 	},
-	node4 = {
+	node10 = {
 		width = 320,
-		y = -162.5,
-		x = 857.5,
-		height = 104,
-		text = "I think I should go see a doctor.%tNEUTRAL END",
+		y = 301,
+		x = 1319,
+		height = 184,
+		text = "She tenses up, but then relaxes and returns the hug. She is warm and soft. After a couple of seconds, she untangles herself and, waving goodbye, leaves to go to class. %tI really ought to do the same.",
+	},
+	node9 = {
+		width = 320,
+		y = 88,
+		x = 1305,
+		height = 120,
+		text = "I remember that I was supposed to be in class and start running.",
+	},
+	node11 = {
+		width = 320,
+		y = 562,
+		x = 1341,
+		height = 120,
+		text = "???: \"Still, I feel really bad about it.\"%tMC: \"Happens to the best of us.\"",
+	},
+	node12 = {
+		width = 320,
+		y = 771,
+		x = 1371,
+		height = 120,
+		text = "???: \"Wha... you ass! Very funny.\"%tMC: \"Thanks for checking in on me, though.\"",
 	},
 }

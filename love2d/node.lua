@@ -69,6 +69,12 @@ nodeManager.draw = function()
 		end
 
 		love.graphics.rectangle("fill", v.x - 2, v.y - 2, v.width + 4, v.height + 4, 6)
+		if nodeManager.selectedNode == v then
+			love.graphics.setColor(127, 63, 0)
+		else
+			love.graphics.setColor(63, 63, 63)
+		end
+    love.graphics.rectangle("fill", v.x - 1, v.y - 1, v.width + 2, v.height + 2, 6)
 
 		love.graphics.setColor(191, 191, 191)
 		love.graphics.rectangle("fill", v.x, v.y, v.width, v.height, 6)
@@ -78,15 +84,16 @@ nodeManager.draw = function()
 			love.graphics.setColor(63, 63, 63)
 		end
 
-		love.graphics.rectangle("fill", v.x + 1, v.y + 1, v.width - 2, 22, 6)
+		love.graphics.rectangle("fill", v.x, v.y, v.width, 24, 6)
+    love.graphics.rectangle("fill", v.x, v.y + 12, v.width, 12)
 		love.graphics.setColor(223, 223, 223)
 		love.graphics.printf(k, v.x, v.y + 4, v.width, "center")
 		love.graphics.setColor(223, 223, 223)
 		love.graphics.printf("x", v.x, v.y + 4, v.width - 8, "right")
-		love.graphics.setColor(0, 0, 0)
-		love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 6)
+		love.graphics.setColor(63, 63, 63)
+		love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 7, 16)
 		love.graphics.setColor(223, 223, 223)
-		love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 4)
+		love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 5, 16)
 
 		if v.out then
 			for k2, v2 in pairs(v.out) do
@@ -107,9 +114,9 @@ nodeManager.draw = function()
           end
 				end
 				love.graphics.setColor(63, 63, 63)
-				love.graphics.circle("fill", v2.x, v2.y, 6)
+				love.graphics.circle("fill", v2.x, v2.y, 7, 16)
 				love.graphics.setColor(223, 223, 223)
-				love.graphics.circle("fill", v2.x, v2.y, 4)
+				love.graphics.circle("fill", v2.x, v2.y, 5, 16)
 				
 				cnt = cnt + 1
 			end
@@ -142,18 +149,22 @@ nodeManager.draw = function()
 		if v.out then
 			for k2, v2 in pairs(v.out) do
 				if v2.node and nodeManager.list[v2.node] then
-					love.graphics.line(
+					local bezier = love.math.newBezierCurve(
 						v2.x, v2.y,
-            v2.x + 24, v2.y,
-						nodeManager.list[v2.node].x + 12 - 24, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5,
+            v2.x + 64, v2.y,
+						nodeManager.list[v2.node].x + 12 - 64, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5,
             nodeManager.list[v2.node].x + 12, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5
+          )
+          
+          love.graphics.line(
+						bezier:render()
 					)
 					
 					love.graphics.setColor(0, 127, 255)
-					love.graphics.circle("fill", v2.x, v2.y, 4)
+					love.graphics.circle("fill", v2.x, v2.y, 4, 16)
 				
 					love.graphics.setColor(0, 127, 255)
-					love.graphics.circle("fill", nodeManager.list[v2.node].x + 12, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5, 4)
+					love.graphics.circle("fill", nodeManager.list[v2.node].x + 12, nodeManager.list[v2.node].y + nodeManager.list[v2.node].height * 0.5, 4, 16)
 				end
 			end
 		end
@@ -161,17 +172,21 @@ nodeManager.draw = function()
 
 	if nodeManager.node then
 		love.graphics.setColor(255, 127, 0)
-		love.graphics.circle("fill", nodeManager.outX , nodeManager.outY, 4)
-		love.graphics.line(
+		love.graphics.circle("fill", nodeManager.outX , nodeManager.outY, 4, 16)
+		local bezier = love.math.newBezierCurve(
 			nodeManager.outX, nodeManager.outY,
-      nodeManager.outX + 24, nodeManager.outY,
-			nodeManager.mouseX - 24, nodeManager.mouseY,
+      nodeManager.outX + 64, nodeManager.outY,
+			nodeManager.mouseX - 64, nodeManager.mouseY,
       nodeManager.mouseX, nodeManager.mouseY
+    )
+    
+    love.graphics.line(
+      bezier:render()
 		)
 
 		for k, v in pairs(nodeManager.list) do
-			if nodeManager.mouseX >= v.x and nodeManager.mouseX <= v.x + v.width and nodeManager.mouseY >= v.y and nodeManager.mouseY <= v.y + v.height then
-				love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 4)
+			if nodeManager.node ~= k and nodeManager.mouseX >= v.x and nodeManager.mouseX <= v.x + v.width and nodeManager.mouseY >= v.y and nodeManager.mouseY <= v.y + v.height then
+				love.graphics.circle("fill", v.x + 12, v.y + v.height * 0.5, 4, 16)
 				break
 			end
 		end
@@ -238,7 +253,7 @@ nodeManager.mousepressed = function(x, y, button)
 				nodeManager.selectedName = k
 				
 				if button == 1 then
-					if mx >= v.x and mx <= v.x + v.width and my >= v.y + cnt * 16 + 34 and my <= v.y + cnt * 16 + 46 then
+					if mx >= v.x + 24 and mx <= v.x + v.width and my >= v.y + cnt * 16 + 34 and my <= v.y + cnt * 16 + 46 then
 						local out = {}
 						
 						out.name = "ANSWER"
@@ -263,7 +278,7 @@ nodeManager.mousepressed = function(x, y, button)
 				elseif v.out then
 					local cnt2 = 0
 					for k2, v2 in pairs(v.out) do
-						if mx >= v.x and mx <= v.x + v.width - 24 and my >= v.y + cnt2 * 16 + 34 and my <= v.y + cnt2 * 16 + 46 then
+						if mx >= v.x + 24 and mx <= v.x + v.width - 24 and my >= v.y + cnt2 * 16 + 34 and my <= v.y + cnt2 * 16 + 46 then
 							if button == 1 then
 								nodeManager.selectedText = cnt2 + 1
 
@@ -298,7 +313,9 @@ nodeManager.mousereleased = function(x, y, button)
 		
 		for k, v in pairs(nodeManager.list) do
 			if mx >= v.x and mx <= v.x + v.width and my >= v.y and my <= v.y + v.height then
-				nodeManager.list[nodeManager.node].out[nodeManager.out].node = k
+        if nodeManager.node ~= k then
+          nodeManager.list[nodeManager.node].out[nodeManager.out].node = k
+        end
 				connect = true
 				break
 			end
@@ -330,8 +347,8 @@ nodeManager.mousemoved = function(x, y, dx, dy)
 	nodeManager.mouseY = my
 	
 	if nodeManager.scroll then
-		nodeManager.scrollX = nodeManager.scrollX + dx / nodeManager.scale
-		nodeManager.scrollY = nodeManager.scrollY + dy / nodeManager.scale
+		nodeManager.scrollX = math.floor(nodeManager.scrollX + dx / nodeManager.scale)
+		nodeManager.scrollY = math.floor(nodeManager.scrollY + dy / nodeManager.scale)
 	end
 end
 
@@ -339,11 +356,11 @@ nodeManager.wheelmoved = function(x, y)
 	if y < 0 and nodeManager.scale > 0.5 then
 		nodeManager.scrollX = nodeManager.scrollX + 80 / nodeManager.scale
 		nodeManager.scrollY = nodeManager.scrollY + 60 / nodeManager.scale
-		nodeManager.scale = nodeManager.scale - 0.2
+		nodeManager.scale = nodeManager.scale - 0.5
 	elseif y > 0 and nodeManager.scale < 2 then
 		nodeManager.scrollX = nodeManager.scrollX - 80 / nodeManager.scale
 		nodeManager.scrollY = nodeManager.scrollY - 60 / nodeManager.scale
-		nodeManager.scale = nodeManager.scale + 0.2
+		nodeManager.scale = nodeManager.scale + 0.5
 	end
 end
 
