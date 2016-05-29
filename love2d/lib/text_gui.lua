@@ -1,6 +1,15 @@
 text_gui = {}
 
--- load everything
+--[[--
+  Short instructions so nobody has to fight through the (currently horrible) code below:
+  result_checking_function = text_gui.create_choice_box({"1", "2", "3", "4", "no"})
+  create_choice_box() opens a choice box with the choices given as an array and returns a result checking function immediately. When that function is called, it returns either (false, nil) to signal that no choice has been made yet or (true, <choice_number>) after the enter key has been pressed.
+
+  dummy_text = "This is just a short text.\nIt contains \n some newlines in order to\nforce a second page.\nWe still need another two newlines in order to reach the second page on a resolution of 800x600, but now we're done"
+  text_closed_checker = text_gui.create_textbox(dummy_text)
+  In this case, it's almost the same as above, except that the returned function does only return false until all text windows have been closed and true after that
+--]]--
+
 function text_gui.load()
   text_gui.font = love.graphics.newImageFont("data/default_imagefont.png",
     " abcdefghijklmnopqrstuvwxyz" ..
@@ -19,16 +28,17 @@ function text_gui.load()
   text_gui.selected_choice = 1
   text_gui.uppermost_choice = 1
   text_gui.navigate_choices = nil
+  text_gui.choice_made = false
 end
 
 function text_gui.draw()
-  --text_gui.display_choice_box(choices, selected_choice, uppermost_choice)
   if text_gui.current_textbox then
     text_gui.current_textbox()
   elseif text_gui.current_choicebox then
     text_gui.current_choicebox()
   end
 end
+
 
 -- display a given text within a rectangle
 function text_gui.display_text_within_borders(text, minX, minY, maxX, maxY, text_scale)
@@ -79,8 +89,12 @@ end
 function text_gui.create_choice_box(choices)
   text_gui.selected_choice = 1
   text_gui.uppermost_choice = 1
+  text_gui.choice_made = false
   text_gui.current_choicebox = function()
     text_gui.display_choice_box(choices, text_gui.selected_choice, text_gui.uppermost_choice)
+    if text_gui.choice_made then
+      text_gui.current_choicebox = nil
+    end
   end
   text_gui.navigate_choices = function(direction)
     if direction == 1 then
@@ -95,6 +109,15 @@ function text_gui.create_choice_box(choices)
       end
     end
   end
+  -- returns (false, nil) until a choice is made, after that the return value will be (true, <choice_number>)
+  local choice_box_finished_checker = function()
+    if text_gui.choice_made then
+      return true, text_gui.selected_choice
+    else
+      return false, nil
+    end
+  end
+  return choice_box_finished_checker
 end
 
 function text_gui.display_choice_box(choices, highlighted_number, uppermost_choice)
@@ -141,8 +164,16 @@ function text_gui.create_textbox(text)
   text_gui.textbox_index = 1
   text_gui.line_pairs = text_gui._split_text(text)
   text_gui.current_textbox = function()
-    text_gui.display_textboxes(text, text_gui.textbox_index, text_gui.line_pairs)
+    text_gui.textboxvar = text_gui.display_textboxes(text, text_gui.textbox_index, text_gui.line_pairs)
+    if text_gui.textboxvar then
+      text_gui.current_textbox = nil
+    end
   end
+  -- returns false until all text boxes of the current dialogue are closed
+  local textbox_finished_checker = function()
+    return text_gui.textboxvar
+  end
+  return textbox_finished_checker
 end
 
 function text_gui.display_textboxes(text, curr_textbox_number, line_pairs)
@@ -234,4 +265,3 @@ end
 
   return line_pairs
 end
---]]--

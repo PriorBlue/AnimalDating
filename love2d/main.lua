@@ -38,8 +38,8 @@ function love.keypressed(key, scancode, isrepeat)
   if key == "down" and text_gui.navigate_choices then
     text_gui.navigate_choices(-1)
   end
-  if key == "enter" then
-    print("TODO")
+  if key == "return" then
+    text_gui.choice_made = true
   end
 end
 
